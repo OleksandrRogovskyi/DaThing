@@ -16,14 +16,16 @@ public class DefaultButton : UIButtonEvents
     private Vector2 dragStartPos;
     private bool isDragging;
     private bool isPressed;
+    private bool isScaledDown = false;
     float deltaX;
 
     private Image image;
     [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private Transform content;
 
     private void Awake()
     {
-        image = GetComponent<Image>();
+        image = content.GetComponent<Image>();
         Application.targetFrameRate = 120;
     }
 
@@ -39,8 +41,6 @@ public class DefaultButton : UIButtonEvents
         {
             onClick?.Invoke();
         }
-        image.DOFade(1f, duration).SetEase(ease);
-
 
         if (Mathf.Abs(deltaX) >= swipeThreshold)
         {
@@ -48,14 +48,14 @@ public class DefaultButton : UIButtonEvents
             {
                 OnSwipeRight();
             }
-
-            isDragging = false;
         }
         else
         {
             ResetButton();
-            isDragging = false;
         }
+
+        isDragging = false;
+        isPressed = false;
     }
 
     public override void OnDrag(PointerEventData eventData)
@@ -73,16 +73,19 @@ public class DefaultButton : UIButtonEvents
         {
             transform.localPosition = new Vector3(deltaX, transform.localPosition.y, transform.localPosition.z);
 
-            if (Mathf.Abs(deltaX) >= swipeThreshold)
+            if (Mathf.Abs(deltaX) > swipeThreshold && !isScaledDown)
             {
-                transform.DOScale(0.9f, 0.1f).SetEase(ease);
+                isScaledDown = true;
+                content.DOScale(0.9f, 0.1f).SetEase(ease);
             }
-            else
+            else if (Mathf.Abs(deltaX) < swipeThreshold - 100 && isScaledDown)
             {
-                transform.DOScale(1f, 0.1f).SetEase(ease);
+                isScaledDown = false;
+                content.DOScale(1f, 0.1f).SetEase(ease);
             }
         }
     }
+
     private void OnSwipeRight()
     {
         transform.DOLocalMoveX(transform.localPosition.x + discardDistance, slidingDuration).SetEase(ease).OnComplete(() =>
