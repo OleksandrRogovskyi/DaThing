@@ -2,17 +2,11 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    [SerializeField] private GameObject test;
+    [SerializeField] private GameObject button;
+    [SerializeField] private Transform where;
 
-    public void Bruh()
+    public void CreateButton()
     {
-        if (test.activeSelf == false)
-        {
-            test.SetActive(true);
-        }
-        else
-        {
-            test.SetActive(false);
-        }
+        Instantiate(button, where);
     }
 }

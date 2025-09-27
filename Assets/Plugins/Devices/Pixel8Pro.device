@@ -1,0 +1,14 @@
+{
+    "friendlyName": "Minimal Device",
+    "version": 1,
+    "screens": [
+        {
+            "width": 1344,
+            "height": 2992,
+            "dpi": 489.0
+        }
+    ],
+    "systemInfo": {
+        "operatingSystem": "Android"
+    }
+}
