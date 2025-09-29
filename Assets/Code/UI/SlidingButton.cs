@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DefaultButton : UIButtonEvents
+public class SlidingButton : UIButtonEvents
 {
+    [HideInInspector] public int id;
+
     public UnityEngine.Events.UnityEvent onClick;
     [SerializeField] private float duration = 0.2f;
     [SerializeField] private float slidingDuration = 1f;
-    [SerializeField] private Ease ease = Ease.OutBack;
+    [SerializeField] private Ease ease;
     [SerializeField] private float swipeThreshold = 100f;
     [SerializeField] private float discardDistance = 300f;
 
@@ -20,13 +22,12 @@ public class DefaultButton : UIButtonEvents
     float deltaX;
 
     private Image image;
-    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] public TextMeshProUGUI info;
     [SerializeField] private Transform content;
 
     private void Awake()
     {
         image = content.GetComponent<Image>();
-        Application.targetFrameRate = 120;
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -90,7 +91,7 @@ public class DefaultButton : UIButtonEvents
     {
         transform.DOLocalMoveX(transform.localPosition.x + discardDistance, slidingDuration).SetEase(ease).OnComplete(() =>
         {
-            gameObject.SetActive(false);
+            DeleteButton();
         });
         FadeToTransparent();
     }
@@ -98,13 +99,13 @@ public class DefaultButton : UIButtonEvents
     private void FadeToTransparent()
     {
         image.DOFade(0f, slidingDuration).SetEase(ease);
-        text.DOFade(0f, slidingDuration).SetEase(ease);
+        info.DOFade(0f, slidingDuration).SetEase(ease);
     }
 
     private void FadeToOpaque()
     {
         image.DOFade(1f, slidingDuration).SetEase(ease);
-        text.DOFade(1f, slidingDuration).SetEase(ease);
+        info.DOFade(1f, slidingDuration).SetEase(ease);
     }
 
     private void ResetButton()
@@ -113,4 +114,16 @@ public class DefaultButton : UIButtonEvents
         FadeToOpaque();
     }
 
+    private void DeleteButton()
+    {
+        Destroy(gameObject);
+
+        var taskManager = FindAnyObjectByType<TaskManager>(FindObjectsInactive.Include);
+        taskManager.MarkTaskAsDone(id);
+
+        if (Application.isMobilePlatform)
+        {
+            Handheld.Vibrate();
+        }
+    }
 }
