@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    [SerializeField] private GameObject button;
-    [SerializeField] private Transform where;
+    [SerializeField] private GameObject test;
 
-    public void CreateButton()
+    public void TestSmth()
     {
-        Instantiate(button, where);
+        test.GetComponent<Notification_Manager>().ScheduleNotification("Test Title", "Test Message", System.DateTime.Now.AddSeconds(10));
     }
 }

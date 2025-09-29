@@ -5,5 +5,5 @@ public class TaskData
     public string title;
     public string description;
     public bool done;
-    public string dueDate;
+    public System.DateTime dueDate;
 }

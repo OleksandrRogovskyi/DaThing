@@ -17,7 +17,7 @@ public class TaskManager : MonoBehaviour
             title = title,
             description = description,
             done = false,
-            dueDate = time.ToString()
+            dueDate = time
         };
 
         taskList.tasks.Add(newTask);
