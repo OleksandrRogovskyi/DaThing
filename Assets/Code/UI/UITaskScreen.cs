@@ -30,7 +30,7 @@ public class UITaskScreen : MonoBehaviour
         {
             foreach (var task in taskManager.taskList.tasks)
             {
-                if (!task.done)
+                if (!task.done || task.repeat)
                     SpawnDailyTask(task);
             }
         }
@@ -40,11 +40,15 @@ public class UITaskScreen : MonoBehaviour
         }
     }
 
-    private void SpawnDailyTask(TaskData task)
+    private void SpawnDailyTask(DailyTaskData task)
     {
         var newTask = Instantiate(dailyTaskPrefab, dailyTaskParent).GetComponent<SlidingButton>();
         newTask.info.text = task.title;
         newTask.id = task.id;
+        if (task.done && task.repeat)
+        {
+            newTask.SetGreyedOut(true);
+        }
     }
 
 

@@ -42,8 +42,8 @@ public class DefaultButton : UIButtonEvents
             StopCoroutine(holdCoroutine);
             holdCoroutine = null;
 
-            ResetButton();
             if (greyedOut) return;
+            ResetButton();
             onClick?.Invoke();
         }
     }

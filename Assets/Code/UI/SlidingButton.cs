@@ -8,7 +8,8 @@ public class SlidingButton : UIButtonEvents
 {
     [HideInInspector] public int id;
 
-    public UnityEngine.Events.UnityEvent onClick;
+    private bool greyedOut = false;
+
     [SerializeField] private float duration = 0.2f;
     [SerializeField] private float slidingDuration = 1f;
     [SerializeField] private Ease ease;
@@ -32,16 +33,15 @@ public class SlidingButton : UIButtonEvents
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        if (greyedOut) return;
+
         isPressed = true;
         image.DOFade(0.8f, duration).SetEase(ease);
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
-        if (isPressed && !isDragging)
-        {
-            onClick?.Invoke();
-        }
+        if (greyedOut) return;
 
         if (Mathf.Abs(deltaX) >= swipeThreshold)
         {
@@ -53,6 +53,7 @@ public class SlidingButton : UIButtonEvents
         else
         {
             ResetButton();
+            FadeToOpaque();
         }
 
         isDragging = false;
@@ -61,6 +62,8 @@ public class SlidingButton : UIButtonEvents
 
     public override void OnDrag(PointerEventData eventData)
     {
+        if (greyedOut) return;
+
         if (!isDragging)
         {
             dragStartPos = eventData.pressPosition;
@@ -78,6 +81,10 @@ public class SlidingButton : UIButtonEvents
             {
                 isScaledDown = true;
                 content.DOScale(0.9f, 0.1f).SetEase(ease);
+                if (Application.isMobilePlatform)
+                {
+                    Handheld.Vibrate();
+                }
             }
             else if (Mathf.Abs(deltaX) < swipeThreshold - 100 && isScaledDown)
             {
@@ -102,6 +109,12 @@ public class SlidingButton : UIButtonEvents
         info.DOFade(0f, slidingDuration).SetEase(ease);
     }
 
+    public void FadeToGreyOut()
+    {
+        image.DOFade(0.4f, duration).SetEase(ease);
+        info.DOFade(0.4f, duration).SetEase(ease);
+    }
+
     private void FadeToOpaque()
     {
         image.DOFade(1f, slidingDuration).SetEase(ease);
@@ -110,20 +123,38 @@ public class SlidingButton : UIButtonEvents
 
     private void ResetButton()
     {
+        content.DOScale(1f, duration).SetEase(ease);
         transform.DOLocalMoveX(0f, duration).SetEase(ease);
-        FadeToOpaque();
     }
 
     private void DeleteButton()
     {
-        Destroy(gameObject);
-
         var taskManager = FindAnyObjectByType<TaskManager>(FindObjectsInactive.Include);
         taskManager.MarkTaskAsDone(id);
 
-        if (Application.isMobilePlatform)
+        if (taskManager.taskList.tasks[id].repeat)
         {
-            Handheld.Vibrate();
+            SetGreyedOut(true);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    public void SetGreyedOut(bool greyOut)
+    {
+        if (greyedOut == greyOut) return;
+        greyedOut = greyOut;
+        if (greyedOut)
+        {
+            FadeToGreyOut();
+            content.DOScale(1f, duration).SetEase(ease);
+            transform.DOLocalMoveX(0f, slidingDuration).SetEase(ease);
+        }
+        else
+        {
+            FadeToOpaque();
+
         }
     }
 }

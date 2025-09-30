@@ -2,7 +2,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public class Anim_ShowDiscardButton : MonoBehaviour
+public class ShowDiscardButton : MonoBehaviour
 {
     [SerializeField] private GameObject button;
     [SerializeField] private float duration = 0.3f;

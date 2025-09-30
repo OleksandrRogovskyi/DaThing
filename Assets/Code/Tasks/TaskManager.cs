@@ -9,15 +9,17 @@ public class TaskManager : MonoBehaviour
         taskList = TaskStorage.LoadTasks();
     }
 
-    public void AddTaskToStorage(string title, string description, System.DateTime time)
+    public void AddTaskToStorage(string title, string description, bool repeat, TaskRepeatDays repeatDays, System.TimeSpan repeatTime)
     {
-        TaskData newTask = new TaskData
+        DailyTaskData newTask = new DailyTaskData
         {
-            id = taskList.tasks.Count > 0 ? taskList.tasks[^1].id + 1 : 1,
+            id = taskList.tasks.Count,
             title = title,
             description = description,
             done = false,
-            dueDate = time
+            repeat = repeat,
+            repeatDays = repeatDays,
+            repeatTime = repeatTime
         };
 
         taskList.tasks.Add(newTask);
