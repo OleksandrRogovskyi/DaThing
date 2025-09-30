@@ -20,6 +20,8 @@ public class UITaskCreationScreen : MonoBehaviour
     [SerializeField] private List<Transform> repeatDays = new List<Transform>();
     [SerializeField] private GameObject repeatDaysSection;
 
+    [SerializeField] private GameObject timePickerSection;
+
     private void Start()
     {
         taskManager = FindAnyObjectByType<TaskManager>(FindObjectsInactive.Include);
@@ -90,6 +92,8 @@ public class UITaskCreationScreen : MonoBehaviour
                 day.gameObject.GetComponentInChildren<ToggleButton>().value = false;
                 day.gameObject.GetComponentInChildren<ToggleButton>().ResetButton();
             }
+
+            timePickerSection.transform.DOScale(1f, duration).SetEase(ease);
         }
         else
         {
@@ -100,6 +104,7 @@ public class UITaskCreationScreen : MonoBehaviour
                     repeatDaysSection.SetActive(false);
                 });
             }
+            timePickerSection.transform.DOScale(0f, duration).SetEase(ease);
         }
     }
 }
