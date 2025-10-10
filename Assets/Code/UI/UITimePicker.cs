@@ -32,8 +32,16 @@ public class UITimePicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
         itemHeight = timeTextPrefab.GetComponent<RectTransform>().rect.height;
         container.localPosition = new Vector3(0, -count * itemHeight / 2 + itemHeight / 2, 0);
+    }
 
-        UpdateCenteredIndex();
+    public void SetTime(int value)
+    {
+        value = Mathf.Clamp(value, 0, count - 1);
+        container.transform.DOKill();
+        container.transform.DOLocalMoveY(GetSnapYPosition(value), 0.5f).SetEase(Ease.OutQuad).OnComplete(() =>
+        {
+            UpdateCenteredIndex();
+        });
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -99,7 +107,7 @@ public class UITimePicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     private void OnTimeValueSelected(int index)
     {
         onValueChanged?.Invoke();
-        VibrationManager.Instance?.Vibrate(0.1f, 100);
+        VibrationManager.Instance.Vibrate(0.2f, 100);
 
         foreach (var item in items)
         {

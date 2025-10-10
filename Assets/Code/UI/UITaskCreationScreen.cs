@@ -21,7 +21,8 @@ public class UITaskCreationScreen : MonoBehaviour
     [SerializeField] private GameObject repeatDaysSection;
     [SerializeField] private List<Transform> repeatDays = new List<Transform>();
 
-    [SerializeField] private GameObject timePickerSection;
+    [SerializeField] private GameObject timePicker1;
+    [SerializeField] private GameObject timePicker2;
 
     [SerializeField] private UITimePicker startHours;
     [SerializeField] private UITimePicker startMinutes;
@@ -33,7 +34,7 @@ public class UITaskCreationScreen : MonoBehaviour
         taskManager = FindAnyObjectByType<TaskManager>(FindObjectsInactive.Include);
         notificationManager = FindAnyObjectByType<NotificationManager>(FindObjectsInactive.Include);
         InputValidationCheck();
-        ToggleRepeatDays();
+        ToggleRepeat();
     }
 
     public void SaveNewTask()
@@ -47,13 +48,13 @@ public class UITaskCreationScreen : MonoBehaviour
         ResetAfterCreation();
     }
 
-    private void ResetAfterCreation()
+    public void ResetAfterCreation()
     {
         titleInputField.text = "";
         descriptionInputField.text = "";
         repeat.value = false;
         repeat.ResetButton();
-        ToggleRepeatDays();
+        ToggleRepeat();
     }
 
     private void ScheduleNotification()
@@ -68,6 +69,37 @@ public class UITaskCreationScreen : MonoBehaviour
             savebutton.GetComponent<DefaultButton>().SetGreyedOut(false);
         else
             savebutton.GetComponent<DefaultButton>().SetGreyedOut(true);
+    }
+
+    public void TimeValidation()
+    {
+        int startHour = startHours.GetTimeValue();
+        int startMinute = startMinutes.GetTimeValue();
+        int endHour = endHours.GetTimeValue();
+        int endMinute = endMinutes.GetTimeValue();
+
+        DateTime startTime = new DateTime(1, 1, 1, startHour, startMinute, 0);
+        DateTime endTime = new DateTime(1, 1, 1, endHour, endMinute, 0);
+
+        if (endTime <= startTime)
+        {
+            if (startMinute >= 59)
+            {
+                endMinute = 0;
+                endHour = startHour + 1;
+
+                if (endHour >= 23)
+                    endHour = 0;
+            }
+            else
+            {
+                endMinute = startMinute + 1;
+                endHour = startHour;
+            }
+
+            endHours.SetTime(endHour);
+            endMinutes.SetTime(endMinute);
+        }
     }
 
     private bool AtleastOneDaySelected()
@@ -99,7 +131,7 @@ public class UITaskCreationScreen : MonoBehaviour
         return taskRepeatDays;
     }
 
-    public void ToggleRepeatDays()
+    public void ToggleRepeat()
     {
         if (repeat.value)
         {
@@ -111,7 +143,13 @@ public class UITaskCreationScreen : MonoBehaviour
                 day.gameObject.GetComponentInChildren<ToggleButton>().ResetButton();
             }
 
-            timePickerSection.transform.DOScale(1f, duration).SetEase(ease);
+            timePicker1.transform.DOScale(1f, duration).SetEase(ease);
+            timePicker2.transform.DOScale(1f, duration).SetEase(ease);
+
+            startHours.SetTime(DateTime.Now.Hour);
+            startMinutes.SetTime(DateTime.Now.Minute);
+            endHours.SetTime(DateTime.Now.Hour);
+            endMinutes.SetTime(DateTime.Now.Minute + 1);
         }
         else
         {
@@ -122,7 +160,13 @@ public class UITaskCreationScreen : MonoBehaviour
                     repeatDaysSection.SetActive(false);
                 });
             }
-            timePickerSection.transform.DOScale(0f, duration).SetEase(ease);
+            timePicker1.transform.DOScale(0f, duration).SetEase(ease);
+            timePicker2.transform.DOScale(0f, duration).SetEase(ease);
+
+            startHours.SetTime(0);
+            startMinutes.SetTime(0);
+            endHours.SetTime(0);
+            endMinutes.SetTime(0);
         }
     }
 
@@ -140,5 +184,6 @@ public class UITaskCreationScreen : MonoBehaviour
 
         return randomTime;
     }
+
 
 }

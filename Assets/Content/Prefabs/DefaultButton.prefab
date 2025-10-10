@@ -57,7 +57,7 @@ MonoBehaviour:
   onPressAndHold:
     m_PersistentCalls:
       m_Calls: []
-  duration: 0.2
+  duration: 0.15
   ease: 7
   text: {fileID: 4737676899177733533}
   content: {fileID: 6475156144079957781}

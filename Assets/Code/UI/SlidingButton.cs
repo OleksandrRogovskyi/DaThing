@@ -84,7 +84,7 @@ public class SlidingButton : UIButtonEvents
                 content.DOScale(0.9f, 0.1f).SetEase(ease);
                 if (Application.isMobilePlatform)
                 {
-                    Handheld.Vibrate();
+                    VibrationManager.Instance.Vibrate(0.4f, 100);
                 }
             }
             else if (Mathf.Abs(deltaX) < swipeThreshold - 100 && isScaledDown)

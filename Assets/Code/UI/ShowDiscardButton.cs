@@ -1,5 +1,4 @@
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 
 public class ShowDiscardButton : MonoBehaviour
@@ -8,7 +7,7 @@ public class ShowDiscardButton : MonoBehaviour
     [SerializeField] private float duration = 0.3f;
     [SerializeField] private Ease ease;
 
-    [SerializeField] private TMP_InputField titleInputField;
+    [SerializeField] private UITaskCreationScreen taskCreationScreen;
 
     private void OnEnable()
     {
@@ -20,7 +19,7 @@ public class ShowDiscardButton : MonoBehaviour
 
     public void CancelTaskScreation()
     {
-        titleInputField.text = "";
+        taskCreationScreen.ResetAfterCreation();
         button.SetActive(false);
     }
 }

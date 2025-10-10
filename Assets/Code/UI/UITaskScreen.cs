@@ -34,10 +34,6 @@ public class UITaskScreen : MonoBehaviour
                     SpawnDailyTask(task);
             }
         }
-        else
-        {
-            Debug.LogWarning("TaskManager reference is missing in UITaskScreen.");
-        }
     }
 
     private void SpawnDailyTask(DailyTaskData task)

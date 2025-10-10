@@ -9,7 +9,7 @@ public class DefaultButton : UIButtonEvents
 {
     public UnityEngine.Events.UnityEvent onClick;
     public UnityEngine.Events.UnityEvent onPressAndHold;
-    [SerializeField] private float duration = 0.2f;
+    [SerializeField] private float duration = 0.1f;
     [SerializeField] private Ease ease;
 
     private Image image;
@@ -32,7 +32,7 @@ public class DefaultButton : UIButtonEvents
 
         if (greyedOut) return;
         image.DOFade(0.8f, duration).SetEase(ease);
-        content.DOScale(0.95f, duration).SetEase(ease);
+        content.DOScale(0.8f, duration).SetEase(ease);
     }
 
     public override void OnPointerUp(PointerEventData eventData)
