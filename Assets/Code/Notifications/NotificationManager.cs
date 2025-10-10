@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.Notifications.Android;
 using UnityEngine;
 
-public class Notification_Manager : MonoBehaviour
+public class NotificationManager : MonoBehaviour
 {
     const string CHANNEL_ID = "tasks_channel";
 

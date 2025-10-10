@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIHandler : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
 
     //[SerializeField] private UnityEvent onSmth;

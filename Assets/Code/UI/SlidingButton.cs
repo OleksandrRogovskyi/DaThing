@@ -24,6 +24,7 @@ public class SlidingButton : UIButtonEvents
 
     private Image image;
     [SerializeField] public TextMeshProUGUI info;
+    [SerializeField] public TextMeshProUGUI time;
     [SerializeField] private Transform content;
 
     private void Awake()
@@ -107,18 +108,21 @@ public class SlidingButton : UIButtonEvents
     {
         image.DOFade(0f, slidingDuration).SetEase(ease);
         info.DOFade(0f, slidingDuration).SetEase(ease);
+        time.DOFade(0f, slidingDuration).SetEase(ease);
     }
 
     public void FadeToGreyOut()
     {
         image.DOFade(0.4f, duration).SetEase(ease);
         info.DOFade(0.4f, duration).SetEase(ease);
+        time.DOFade(0.4f, duration).SetEase(ease);
     }
 
     private void FadeToOpaque()
     {
         image.DOFade(1f, slidingDuration).SetEase(ease);
         info.DOFade(1f, slidingDuration).SetEase(ease);
+        time.DOFade(1f, slidingDuration).SetEase(ease);
     }
 
     private void ResetButton()

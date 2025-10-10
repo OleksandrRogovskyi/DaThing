@@ -7,5 +7,7 @@ public class DailyTaskData
     public bool done;
     public bool repeat;
     public TaskRepeatDays repeatDays;
-    public System.TimeSpan repeatTime;
+    public System.DateTime startTime;
+    public System.DateTime endTime;
+    public System.DateTime randomTime;
 }

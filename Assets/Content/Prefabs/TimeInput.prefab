@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3646164629695209832}
+  - component: {fileID: 1744941421745515941}
   - component: {fileID: 5166705791749255825}
   - component: {fileID: 7018918602959678284}
   - component: {fileID: 6126023178480184060}
-  - component: {fileID: 1744941421745515941}
   m_Layer: 5
   m_Name: Minutes
   m_TagString: Untagged
@@ -40,6 +40,25 @@ RectTransform:
   m_AnchoredPosition: {x: 137.5, y: 0}
   m_SizeDelta: {x: -275, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1744941421745515941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765991589275753986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbc7688c80fb3a4d9488f5cee1a2b97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  count: 60
+  timeTextPrefab: {fileID: 8160083326511999890, guid: fa8a11f0d4388ba43bc4270aac69158c, type: 3}
+  container: {fileID: 6805555092939071221}
+  snapSpeed: 10
 --- !u!114 &5166705791749255825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,21 +111,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1744941421745515941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 765991589275753986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bbc7688c80fb3a4d9488f5cee1a2b97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  count: 60
-  timeText: {fileID: 8160083326511999890, guid: fa8a11f0d4388ba43bc4270aac69158c, type: 3}
-  container: {fileID: 6805555092939071221}
 --- !u!1 &1599659277455401112
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,9 +394,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bbc7688c80fb3a4d9488f5cee1a2b97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
   count: 24
-  timeText: {fileID: 8160083326511999890, guid: fa8a11f0d4388ba43bc4270aac69158c, type: 3}
+  timeTextPrefab: {fileID: 8160083326511999890, guid: fa8a11f0d4388ba43bc4270aac69158c, type: 3}
   container: {fileID: 7432556755171621449}
+  snapSpeed: 10
 --- !u!114 &7064007012823981774
 MonoBehaviour:
   m_ObjectHideFlags: 0

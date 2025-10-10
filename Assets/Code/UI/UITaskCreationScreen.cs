@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class UITaskCreationScreen : MonoBehaviour
     [SerializeField] private Ease ease;
 
     private TaskManager taskManager;
-    private Notification_Manager notificationManager;
+    private NotificationManager notificationManager;
 
     [SerializeField] private TMP_InputField titleInputField;
     [SerializeField] private TMP_InputField descriptionInputField;
@@ -17,31 +18,48 @@ public class UITaskCreationScreen : MonoBehaviour
     [SerializeField] private GameObject discardButton;
     [SerializeField] private GameObject savebutton;
 
-    [SerializeField] private List<Transform> repeatDays = new List<Transform>();
     [SerializeField] private GameObject repeatDaysSection;
+    [SerializeField] private List<Transform> repeatDays = new List<Transform>();
 
     [SerializeField] private GameObject timePickerSection;
+
+    [SerializeField] private UITimePicker startHours;
+    [SerializeField] private UITimePicker startMinutes;
+    [SerializeField] private UITimePicker endHours;
+    [SerializeField] private UITimePicker endMinutes;
 
     private void Start()
     {
         taskManager = FindAnyObjectByType<TaskManager>(FindObjectsInactive.Include);
-        notificationManager = FindAnyObjectByType<Notification_Manager>(FindObjectsInactive.Include);
+        notificationManager = FindAnyObjectByType<NotificationManager>(FindObjectsInactive.Include);
         InputValidationCheck();
         ToggleRepeatDays();
     }
 
     public void SaveNewTask()
     {
-        taskManager.AddTaskToStorage(titleInputField.text, descriptionInputField.text, repeat.value, GetRepeatDays(), System.TimeSpan.MaxValue);
+        DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, startHours.GetTimeValue(), startMinutes.GetTimeValue(), 00);
+        DateTime endTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, endHours.GetTimeValue(), endMinutes.GetTimeValue(), 00);
 
-        var newTask = taskManager.taskList.tasks[taskManager.taskList.tasks.Count - 1];
-        //notificationManager.ScheduleNotification(newTask.title, newTask.description, newTask.date);
-        foreach (var day in newTask.repeatDays.value)
-        {
-            Debug.Log(day);
-        }
+        taskManager.AddTaskToStorage(titleInputField.text, descriptionInputField.text, repeat.value, GetRepeatDays(), startTime, endTime, GetRandomTimePeriod(startTime, endTime));
 
+        ScheduleNotification();
+        ResetAfterCreation();
+    }
+
+    private void ResetAfterCreation()
+    {
         titleInputField.text = "";
+        descriptionInputField.text = "";
+        repeat.value = false;
+        repeat.ResetButton();
+        ToggleRepeatDays();
+    }
+
+    private void ScheduleNotification()
+    {
+        var task = taskManager.taskList.tasks[taskManager.taskList.tasks.Count - 1];
+        notificationManager.ScheduleNotification(task.title, task.description, task.randomTime);
     }
 
     public void InputValidationCheck()
@@ -107,4 +125,20 @@ public class UITaskCreationScreen : MonoBehaviour
             timePickerSection.transform.DOScale(0f, duration).SetEase(ease);
         }
     }
+
+    public DateTime GetRandomTimePeriod(DateTime start, DateTime end)
+    {
+        if (end <= start)
+        {
+            Debug.LogWarning("End time must be after start time!");
+            end = start.AddHours(1);
+        }
+
+        double totalSeconds = (end - start).TotalSeconds;
+        double randomSeconds = UnityEngine.Random.Range(0f, (float)totalSeconds);
+        DateTime randomTime = start.AddSeconds(randomSeconds);
+
+        return randomTime;
+    }
+
 }

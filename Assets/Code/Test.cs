@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    [SerializeField] private GameObject test;
-
     public void TestSmth()
     {
-        test.GetComponent<Notification_Manager>().ScheduleNotification("Test Title", "Test Message", System.DateTime.Now.AddSeconds(10));
+        VibrationManager.Instance.Vibrate(0.1f, 100);
     }
 }

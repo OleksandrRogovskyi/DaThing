@@ -9,7 +9,7 @@ public class TaskManager : MonoBehaviour
         taskList = TaskStorage.LoadTasks();
     }
 
-    public void AddTaskToStorage(string title, string description, bool repeat, TaskRepeatDays repeatDays, System.TimeSpan repeatTime)
+    public void AddTaskToStorage(string title, string description, bool repeat, TaskRepeatDays repeatDays, System.DateTime startTime, System.DateTime endTime, System.DateTime randomTime)
     {
         DailyTaskData newTask = new DailyTaskData
         {
@@ -19,7 +19,9 @@ public class TaskManager : MonoBehaviour
             done = false,
             repeat = repeat,
             repeatDays = repeatDays,
-            repeatTime = repeatTime
+            startTime = startTime,
+            endTime = endTime,
+            randomTime = randomTime
         };
 
         taskList.tasks.Add(newTask);
