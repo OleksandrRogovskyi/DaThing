@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TaskManager : MonoBehaviour
@@ -9,7 +11,7 @@ public class TaskManager : MonoBehaviour
         taskList = TaskStorage.LoadTasks();
     }
 
-    public void AddTaskToStorage(string title, string description, bool repeat, TaskRepeatDays repeatDays, System.DateTime startTime, System.DateTime endTime, System.DateTime randomTime)
+    public void AddTaskToStorage(string title, string description, bool repeat, TaskRepeatDays repeatDays, System.DateTime startTime, System.DateTime endTime, List<DateTime> scheduledNotifications)
     {
         DailyTaskData newTask = new DailyTaskData
         {
@@ -21,7 +23,7 @@ public class TaskManager : MonoBehaviour
             repeatDays = repeatDays,
             startTime = startTime,
             endTime = endTime,
-            randomTime = randomTime
+            scheduledNotifications = scheduledNotifications
         };
 
         taskList.tasks.Add(newTask);

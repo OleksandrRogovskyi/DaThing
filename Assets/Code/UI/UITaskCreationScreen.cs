@@ -9,6 +9,7 @@ public class UITaskCreationScreen : MonoBehaviour
     [SerializeField] private float duration = 0.2f;
     [SerializeField] private Ease ease;
 
+
     private TaskManager taskManager;
     private NotificationManager notificationManager;
 
@@ -20,6 +21,8 @@ public class UITaskCreationScreen : MonoBehaviour
 
     [SerializeField] private GameObject repeatDaysSection;
     [SerializeField] private List<Transform> repeatDays = new List<Transform>();
+
+    [SerializeField] private int scheduleDays = 14;
 
     [SerializeField] private GameObject timePicker1;
     [SerializeField] private GameObject timePicker2;
@@ -39,10 +42,10 @@ public class UITaskCreationScreen : MonoBehaviour
 
     public void SaveNewTask()
     {
-        DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, startHours.GetTimeValue(), startMinutes.GetTimeValue(), 00);
-        DateTime endTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, endHours.GetTimeValue(), endMinutes.GetTimeValue(), 00);
+        DateTime startTime = new DateTime(1, 1, 1, startHours.GetTimeValue(), startMinutes.GetTimeValue(), 00);
+        DateTime endTime = new DateTime(1, 1, 1, endHours.GetTimeValue(), endMinutes.GetTimeValue(), 00);
 
-        taskManager.AddTaskToStorage(titleInputField.text, descriptionInputField.text, repeat.value, GetRepeatDays(), startTime, endTime, GetRandomTimePeriod(startTime, endTime));
+        taskManager.AddTaskToStorage(titleInputField.text, descriptionInputField.text, repeat.value, GetRepeatDays(), startTime, endTime, GenerateNotificationSchedule(GetRepeatDays(), startTime, endTime));
 
         ScheduleNotification();
         ResetAfterCreation();
@@ -60,7 +63,13 @@ public class UITaskCreationScreen : MonoBehaviour
     private void ScheduleNotification()
     {
         var task = taskManager.taskList.tasks[taskManager.taskList.tasks.Count - 1];
-        notificationManager.ScheduleNotification(task.title, task.description, task.randomTime);
+
+        foreach (var time in task.scheduledNotifications)
+        {
+            Debug.Log(time);
+        }
+
+        //notificationManager.ScheduleNotification(task.title, task.description, task.randomTime);
     }
 
     public void InputValidationCheck()
@@ -170,20 +179,40 @@ public class UITaskCreationScreen : MonoBehaviour
         }
     }
 
-    public DateTime GetRandomTimePeriod(DateTime start, DateTime end)
+    private DateTime GetRandomTime(DateTime start, DateTime end, DateTime targetDate)
     {
-        if (end <= start)
+        TimeSpan range = end - start;
+        if (range.TotalSeconds <= 0)
+            range = TimeSpan.FromHours(1);
+
+        double randomSeconds = UnityEngine.Random.Range(0f, (float)range.TotalSeconds);
+        DateTime result = new DateTime(targetDate.Year, targetDate.Month, targetDate.Day, start.Hour, start.Minute, 0)
+            .AddSeconds(randomSeconds);
+
+        return result;
+    }
+    private List<DateTime> GenerateNotificationSchedule(TaskRepeatDays days, DateTime startTime, DateTime endTime)
+    {
+        List<DateTime> scheduledTimes = new List<DateTime>();
+
+        DateTime today = DateTime.Now.Date;
+
+        for (int i = 0; i < scheduleDays; i++)
         {
-            Debug.LogWarning("End time must be after start time!");
-            end = start.AddHours(1);
+            DateTime targetDay = today.AddDays(i);
+            int dayOfWeek = (int)targetDay.DayOfWeek;
+
+            if (days.value[dayOfWeek])
+            {
+                DateTime randomTime = GetRandomTime(startTime, endTime, targetDay);
+
+                scheduledTimes.Add(randomTime);
+
+                /*notificationManager.ScheduleNotification(task.title, task.description, randomTime);
+                Debug.Log($"Scheduled '{task.title}' on {randomTime}");*/
+            }
         }
 
-        double totalSeconds = (end - start).TotalSeconds;
-        double randomSeconds = UnityEngine.Random.Range(0f, (float)totalSeconds);
-        DateTime randomTime = start.AddSeconds(randomSeconds);
-
-        return randomTime;
+        return scheduledTimes;
     }
-
-
 }

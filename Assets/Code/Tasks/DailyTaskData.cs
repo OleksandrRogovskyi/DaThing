@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 [System.Serializable]
 public class DailyTaskData
 {
@@ -9,5 +12,5 @@ public class DailyTaskData
     public TaskRepeatDays repeatDays;
     public System.DateTime startTime;
     public System.DateTime endTime;
-    public System.DateTime randomTime;
+    public List<DateTime> scheduledNotifications = new List<DateTime>();
 }

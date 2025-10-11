@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SlidingButton : UIButtonEvents
 {
-    [HideInInspector] public int id;
+    public int id;
 
     private bool greyedOut = false;
 
@@ -27,13 +27,23 @@ public class SlidingButton : UIButtonEvents
     [SerializeField] public TextMeshProUGUI time;
     [SerializeField] private Transform content;
 
+    private TaskManager taskManager;
+
     private void Awake()
     {
         image = content.GetComponent<Image>();
+        taskManager = FindAnyObjectByType<TaskManager>(FindObjectsInactive.Include);
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        var task = taskManager.taskList.tasks[id];
+
+        foreach (var time in task.scheduledNotifications)
+        {
+            Debug.Log(time);
+        }
+
         if (greyedOut) return;
 
         isPressed = true;
@@ -133,7 +143,7 @@ public class SlidingButton : UIButtonEvents
 
     private void DeleteButton()
     {
-        var taskManager = FindAnyObjectByType<TaskManager>(FindObjectsInactive.Include);
+
         taskManager.MarkTaskAsDone(id);
 
         if (taskManager.taskList.tasks[id].repeat)

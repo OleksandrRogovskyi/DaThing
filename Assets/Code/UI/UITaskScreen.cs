@@ -41,7 +41,7 @@ public class UITaskScreen : MonoBehaviour
         var newTask = Instantiate(dailyTaskPrefab, dailyTaskParent).GetComponent<SlidingButton>();
         newTask.info.text = task.title;
         newTask.id = task.id;
-        newTask.time.text = task.randomTime.ToString("HH:mm");
+        //newTask.time.text = task.randomTime.ToString("HH:mm");
         if (task.done && task.repeat)
         {
             newTask.SetGreyedOut(true);
